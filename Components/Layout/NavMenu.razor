@@ -1,46 +1,57 @@
 ﻿@implements IDisposable
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @inject NavigationManager NavigationManager
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">ScorelyApp</a>
+<aside class="w-80 bg-slate-900 flex flex-col">
+    <!-- Logo Section -->
+    <div class="p-6">
+        <div class="flex items-center space-x-3">
+            <!-- Logo -->
+            <span class="text-xl font-semibold text-white">Scorely</span>
+        </div>
     </div>
-</div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <!-- Navigation Links -->
+    <nav class="flex-1 px-3 py-2">
+        <NavLink href="/score-predictions" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-slate-800 hover:text-white transition-all mb-1" ActiveClass="bg-slate-800 text-white">
+            <!--Icon-->
+            <span class="font-medium">Score Predictions</span>
+        </NavLink>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+        <NavLink href="/leagues" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-slate-800 hover:text-white transition-all mb-1" ActiveClass="bg-slate-800 text-white">
+            <!--Icon-->
+            <span class="font-medium">Leagues</span>
+        </NavLink>
+    </nav>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="auth">
-                <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
-            </NavLink>
-        </div>
-
+    <!-- Profile Section at Bottom -->
+    <div class="p-4 border-t border-slate-800">
         <AuthorizeView>
             <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-                        </button>
-                    </form>
-                </div>
+                <NavLink href="/Account/Manage" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800 transition-colors">
+                    <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-white font-semibold text-sm">@GetInitials(context.User.Identity?.Name)</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-white truncate">@GetDisplayName(context.User.Identity?.Name)</div>
+                        <div class="text-xs text-gray-400 truncate">@context.User.Identity?.Name</div>
+                    </div>
+                </NavLink>
             </Authorized>
+            <NotAuthorized>
+                <NavLink href="Account/Login" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800 transition-colors">
+                    <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-gray-400 font-semibold text-sm">?</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-white">Guest</div>
+                        <div class="text-xs text-gray-400">Login</div>
+                    </div>
+                </NavLink>
+            </NotAuthorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Register">
@@ -54,8 +65,8 @@
                 </div>
             </NotAuthorized>
         </AuthorizeView>
-    </nav>
-</div>
+    </div>
+</aside>
 
 @code {
     private string? currentUrl;
@@ -76,5 +87,40 @@
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
-}
 
+    private string GetInitials(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "?";
+
+        var parts = name.Split('@')[0].Split('.');
+
+        if(parts.Length>=2)
+            return $"{parts[0][0]}{parts[1][0]}".ToUpper();
+
+        return name.Substring(0, Math.Min(2, name.Length)).ToUpper();
+    }
+
+    private string GetDisplayName(string? email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return "Guest";
+
+        var namePart = email.Split('@')[0];
+
+        var parts = namePart.Split('.');
+
+        if (parts.Length >= 2)
+            return $"{Capitalize(parts[0])} {Capitalize(parts[1])}";
+
+        return Capitalize(namePart);
+    }
+
+    private string Capitalize(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return text;
+
+        return char.ToUpper(text[0]) + text.Substring(1);
+    }
+}
