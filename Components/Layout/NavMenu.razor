@@ -1,28 +1,27 @@
-﻿@implements IDisposable
+﻿@using ScorelyApp.Components.Svg
+@implements IDisposable
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @inject NavigationManager NavigationManager
 
-<aside class="w-64 bg-slate-900 flex flex-col">
-    <!-- Logo Section -->
+<aside class="w-64 flex flex-col bg-gradient-to-b from-teal-900 via-cyan-950 to-stone-900">
+    <!-- Logo -->
     <div class="p-6">
         <div class="flex items-center space-x-3">
-            <!-- Logo -->
-            <img src="/images/logo.png" />
+            <img src="/images/logo.png"/>
         </div>
     </div>
 
     <!-- Navigation Links -->
     <nav class="flex-1 px-3 py-2">
-        <NavLink href="/score-predictions" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-slate-800 hover:text-white transition-all mb-1" ActiveClass="bg-slate-800 text-white">
-            <!--Icon-->
+        <NavLink href="/score-predictions" class=@authorizedNavLinkClass ActiveClass="bg-teal-500 text-white">
+            <Football />
             <span class="font-medium">Predictions</span>
         </NavLink>
-
-        <NavLink href="/leagues" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-slate-800 hover:text-white transition-all mb-1" ActiveClass="bg-slate-800 text-white">
-            <!--Icon-->
+        <NavLink href="/leagues" class=@authorizedNavLinkClass ActiveClass="bg-teal-500 text-white">
+            <Trophy />
             <span class="font-medium">Leagues</span>
         </NavLink>
     </nav>
@@ -31,8 +30,8 @@
     <div class="p-4 border-t border-slate-800">
         <AuthorizeView>
             <Authorized>
-                <NavLink href="/Account/Manage" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800 transition-colors">
-                    <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <NavLink href="/Account/Manage" class=@notAuthorizedNavLinkClass>
+                    <div class="w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center flex-shrink-0">
                         <span class="text-white font-semibold text-sm">@GetInitials(context.User.Identity?.Name)</span>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -42,7 +41,7 @@
                 </NavLink>
             </Authorized>
             <NotAuthorized>
-                <NavLink href="Account/Login" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800 transition-colors">
+                <NavLink href="Account/Login" class=@notAuthorizedNavLinkClass>
                     <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
                         <span class="text-gray-400 font-semibold text-sm">?</span>
                     </div>
@@ -70,6 +69,8 @@
 
 @code {
     private string? currentUrl;
+    private string? authorizedNavLinkClass = "flex items-center space-x-3 px-3 py-3 rounded-full text-gray-200 hover:bg-teal-500 hover:text-white transition-all mb-1 text-lg";
+    private string? notAuthorizedNavLinkClass = "flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800 transition-colors";
 
     protected override void OnInitialized()
     {
@@ -95,7 +96,7 @@
 
         var parts = name.Split('@')[0].Split('.');
 
-        if(parts.Length>=2)
+        if (parts.Length >= 2)
             return $"{parts[0][0]}{parts[1][0]}".ToUpper();
 
         return name.Substring(0, Math.Min(2, name.Length)).ToUpper();
