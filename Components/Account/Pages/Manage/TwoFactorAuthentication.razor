@@ -11,8 +11,11 @@
 
 <PageTitle>Two-factor authentication (2FA)</PageTitle>
 
-<StatusMessage />
-<h3>Two-factor authentication (2FA)</h3>
+<div>
+    <h3 class="text-white text-2xl">Two-factor authentication (2FA)</h3>
+    <StatusMessage />
+</div>
+
 @if (canTrack)
 {
     if (is2faEnabled)
@@ -47,19 +50,25 @@
             </form>
         }
 
-        <a href="Account/Manage/Disable2fa" class="btn btn-primary">Disable 2FA</a>
-        <a href="Account/Manage/GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
+        <div class="pt-8 pb-8 border-t border-b border-gray-500 flex gap-2">
+            <a href="Account/Manage/Disable2fa" class="px-4 py-2 rounded-xl text-gray-200 bg-teal-500 text-white hover:opacity-75">Disable 2FA</a>
+            <a href="Account/Manage/GenerateRecoveryCodes" class="px-4 py-2 rounded-xl text-gray-200 bg-teal-500 text-white hover:opacity-75">Reset recovery codes</a>
+        </div>
     }
 
-    <h4>Authenticator app</h4>
+    <h3 class="text-white text-2xl">Authenticator app</h3>
     @if (!hasAuthenticator)
     {
-        <a href="Account/Manage/EnableAuthenticator" class="btn btn-primary">Add authenticator app</a>
+        <div class="pt-8 pb-8 border-t border-b border-gray-500 flex gap-2">
+            <a href="Account/Manage/EnableAuthenticator" class="px-4 py-2 rounded-xl text-gray-200 bg-teal-500 text-white hover:opacity-75">Add authenticator app</a>
+        </div>
     }
     else
     {
-        <a href="Account/Manage/EnableAuthenticator" class="btn btn-primary">Set up authenticator app</a>
-        <a href="Account/Manage/ResetAuthenticator" class="btn btn-primary">Reset authenticator app</a>
+        <div class="pt-8 pb-8 border-t border-b border-gray-500 flex gap-2">
+            <a href="Account/Manage/EnableAuthenticator" class="px-4 py-2 rounded-xl text-gray-200 bg-teal-500 text-white hover:opacity-75">Set up authenticator app</a>
+            <a href="Account/Manage/ResetAuthenticator" class="px-4 py-2 rounded-xl text-gray-200 bg-teal-500 text-white hover:opacity-75">Reset authenticator app</a>
+        </div>
     }
 }
 else
