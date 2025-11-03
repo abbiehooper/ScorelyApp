@@ -16,11 +16,11 @@
 
     <!-- Navigation Links -->
     <nav class="flex-1 px-3 py-2">
-        <NavLink href="/score-predictions" class=@authorizedNavLinkClass ActiveClass="bg-teal-500 text-white">
+        <NavLink href="/score-predictions" class=@navLinkClass ActiveClass="bg-teal-500 text-white">
             <Football />
             <span class="font-medium">Predictions</span>
         </NavLink>
-        <NavLink href="/leagues" class=@authorizedNavLinkClass ActiveClass="bg-teal-500 text-white">
+        <NavLink href="/leagues" class=@navLinkClass ActiveClass="bg-teal-500 text-white">
             <Trophy />
             <span class="font-medium">Leagues</span>
         </NavLink>
@@ -30,7 +30,7 @@
     <div class="p-4 border-t border-slate-800">
         <AuthorizeView>
             <Authorized>
-                <NavLink href="/Account/Manage" class=@notAuthorizedNavLinkClass>
+                <NavLink href="/Account/Manage" class=@navLinkClass>
                     <div class="w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center flex-shrink-0">
                         <span class="text-white font-semibold text-sm">@GetInitials(context.User.Identity?.Name)</span>
                     </div>
@@ -41,7 +41,7 @@
                 </NavLink>
             </Authorized>
             <NotAuthorized>
-                <NavLink href="Account/Login" class=@notAuthorizedNavLinkClass>
+                <NavLink href="Account/Login" class=@navLinkClass>
                     <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
                         <span class="text-gray-400 font-semibold text-sm">?</span>
                     </div>
@@ -53,12 +53,12 @@
             </NotAuthorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
+                    <NavLink class="@navLinkClass" href="Account/Register">
                         <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
+                    <NavLink class="@navLinkClass" href="Account/Login">
                         <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
                     </NavLink>
                 </div>
@@ -69,8 +69,7 @@
 
 @code {
     private string? currentUrl;
-    private string? authorizedNavLinkClass = "flex items-center space-x-3 px-3 py-3 rounded-full text-gray-200 hover:bg-teal-500 hover:text-white transition-all mb-1 text-lg";
-    private string? notAuthorizedNavLinkClass = "flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800 transition-colors";
+    private string? navLinkClass = "flex items-center space-x-3 px-3 py-3 rounded-full text-gray-200 hover:bg-teal-500 hover:text-white active:bg-teal-500 active:text-white transition-all mb-1 text-lg";
 
     protected override void OnInitialized()
     {
